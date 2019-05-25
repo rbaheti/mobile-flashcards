@@ -1,4 +1,4 @@
-import { RECEIVE_DECKS, ADD_DECK, ADD_QUESTION } from '../actions'
+import { RECEIVE_DECKS, ADD_DECK, DELETE_DECK, ADD_QUESTION } from '../actions'
 
 export default function decks (state = null, action) {
   console.log("current state", state);
@@ -11,8 +11,11 @@ export default function decks (state = null, action) {
     case ADD_DECK :
       return {
         ...state,
-        ...action.deck
+        [action.deck.title]: action.deck,
       }
+    case DELETE_DECK :
+      const { [action.deckTitle]: removedDeck, ...remainingDecks } = state;
+      return { ...remainingDecks };
     case ADD_QUESTION :
       return {
         ...state,

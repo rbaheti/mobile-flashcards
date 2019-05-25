@@ -2,13 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import {handleInitialData} from './actions';
 import middleware from "./middleware";
 import reducer from './reducers'
 import Decks from './components/Decks'
 import Deck from './components/Deck'
 import AddDeck from './components/AddDeck'
 import AddCard from './components/AddCard'
+import Quiz from './components/Quiz'
+import { setLocalNotification } from './utils/helpers'
 import { createAppContainer, createBottomTabNavigator, createStackNavigator } from 'react-navigation'
 import { purple, white } from './utils/colors'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
@@ -78,12 +79,25 @@ const MainNavigator = createStackNavigator({
         backgroundColor: purple,
       }
     }
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      }
+    }
   }
 })
 
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+
   render() {
     return (
       <Provider store={createStore(reducer, middleware)}>

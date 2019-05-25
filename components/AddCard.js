@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import { Button, Text, TextInput, View } from 'react-native'
+import { Button, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, View, StyleSheet } from 'react-native'
 import {addQuestion} from '../actions';
 import { gray, purple } from '../utils/colors'
 
@@ -32,42 +32,72 @@ class AddCard extends Component {
     if (this.state.question === '' || this.state.answer === '') {
       return;
     }
-    console.log("adding card for ", this.state.deckTitle);
-
+    
     this.props.dispatch(addQuestion(
       this.state.deckTitle,
       {
        question: this.state.question,
        answer: this.state.answer,
       }
-  ));
+    ));
     this.props.navigation.goBack();
   }
 
   render() {
     return (
-      <View>
+      // KeyboardAvoidingView needed to prevent keyboard from hiding TextInput.
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        style={styles.titleTextInput}
         placeholder='Question'
         placeholderTextColor={gray}
         onChangeText={this.questionChanged}
         value={this.state.question}
         />
         <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        style={styles.titleTextInput}
         placeholder='Answer'
         placeholderTextColor={gray}
         onChangeText={this.answerChanged}
         value={this.state.answer}
         />
-        <Button
-        onPress={this.createCard}
-        title="Submit"
-        />
-      </View>
+        
+        <TouchableOpacity style={styles.buttonStyle} onPress={this.createCard}>
+          <Text style={styles.buttonText}>SUBMIT</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     )
  }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+   },
+  titleTextInput: {
+    margin: 5,
+    fontSize: 20,
+    height: 40,
+    width: '95%',
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  buttonStyle: {
+    margin: 5,
+    padding: 10,
+    alignItems: 'center',
+    fontSize: 20,
+    width: '50%',
+    color: 'white',
+    backgroundColor: purple,
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    color: 'white',
+  }
+})
 
 export default connect()(AddCard);
